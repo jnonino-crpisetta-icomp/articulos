@@ -38,7 +38,7 @@
 		
 		\begin{figure*}[!b]
 			\centering
-			\includegraphics[width=6.5in]{./img/diseno48}
+			\includegraphics[width=6.5in]{diseno48}
 			\caption{Arquitectura del procesador de Redes de Petri Temporizadas}
 			\label{fig:diseno48}
 		\end{figure*}
@@ -69,3 +69,38 @@
 		\item Cuando el vector de tiempo supera la duración de la transición se completa el disparo actualizando el marcado únicamente agregando los tokens en las plazas de salida en función de la matriz I+.
 		\item Se incrementa contador de cola de salida correspondiente a transición ejecutada.
 	\end{enumerate}	
+
+	\section{Crecimiento del IP Core}
+	Se analizó el crecimiento del procesador en función de los parámetros que posee. 
+	Para esto se generaron procesadores de 8x8, 16x16 y 
+	32x32 con capacidad de 7 bits por plaza y elementos de tiempo de 48 bits 
+	y se graficaron los valores que se pueden observar en la Figura \ref{fig:resultados09}.
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=3.5in]{resultados09}
+		\caption{Diferentes implementaciones del procesador de Redes de Petri}
+		\label{fig:resultados09}
+	\end{figure}
+
+	Es observa que el crecimiento del IP Core no es algo para despreciar, puesto que 
+	se incrementa rápidamente a medida que aumentamos la cantidad de elementos soportados.
+	Se observa también que si bien la pendiente aumenta, éstos incrementos son cada vez menores,
+	tendiendo a linealizar para los IP Cores más grandes.
+
+\section{Timed vs Time}
+
+	Debido a la posibilidad de implementar Timed Petri Nets utilizando plazas y transiciones intermedias
+	utilizando un procesador de Time Petries Nets, se compararon las curvas de crecimiento, las cuales se 
+	muestran en la la Figura\ref{fig:timevstimed}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=3.5in]{timevstimed} 
+		\caption{Comparación del crecimiento del IP Core}
+		\label{fig:timevstimed} 
+	\end{figure}
+
+	Se Puede observar que el incremento de Flip-Flops se mantienen parejos, pero en el caso de las LUTs
+	el crecimiento exponencial posee mayor pendiente en el Timed ip core, necesitando un 90\% mas que el
+	Time ip core. 

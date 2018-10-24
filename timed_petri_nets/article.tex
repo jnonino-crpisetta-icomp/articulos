@@ -48,7 +48,7 @@
 	\ifCLASSINFOpdf
 		\usepackage[pdftex]{graphicx}
 			% declare the path(s) where your graphic files are
-			% \graphicspath{{../pdf/}{../jpeg/}}
+			\graphicspath{{img/}}
 			% and their extensions so you won't have to specify these with
 			% every instance of \includegraphics
 			% \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
@@ -226,28 +226,37 @@
 %	DOCUMENT BEGINING
 	\begin{document}		
 	
-	%	TITLE AND AUTHORS
-		\input{title_authors}
+		% TITLE AND AUTHORS
+		\input{./title_authors/english}
 		
-	%	ABSTRACT
-		\input{abstract}
+		% ABSTRACT
+		\input{./abstract/english}
 
-	%	INTRODUCTION
-		\input{introduction}
-	
-	%	OBJECTIVES
-		\input{objectives}
+		% INTRODUCTION
+		\input{./introduction/english}
 
-	%	PETRI NETS CONSIDERING TIME
-		\input{petri_nets_considering_time}
+		% PETRI NETS
+		%\input{./basic_petri_nets/english}
+		\input{./petri_nets/english}
+		\input{./timed_petri_nets/english}
 		
-	%	TIME PETRI NETS
-		\input{timed_petri_nets}
-		
-	%	TIMED PETRI PROCESSOR ARCHITECTURE AND OPERATION 
-		\input{architecture_operation}	
+		% ARCHITECTURE AND OPERATION
+		\input{./architecture/english}
+		%\input{./ip_core/english}
 
-	%	REFERENCES
+		% PERFORMANCE
+		%\input{./performance/english}
+
+		% CONCLUSION
+		\input{./conclusion/english}
+
+		% Conference papers DO NOT normally have an appendix
+		% \input{./appendix/english}
+
+		% ACKNOWLEDGEMENT
+		\input{./acknowledgment/english}
+
+		% REFERENCES
 		% Can use something like this to put references on a page
 		% by themselves when using endfloat and the captionsoff option.
 			\ifCLASSOPTIONcaptionsoff
@@ -270,7 +279,7 @@
 		% http://www.michaelshell.org/tex/ieeetran/bibtex/
 			\bibliographystyle{IEEEtran}
 		% argument is your BibTeX string definitions and bibliography database(s)
-			\bibliography{./bib/referencias}
+			\bibliography{./referencias}
 		%
 		% <OR> manually copy in the resultant .bbl file
 		% set second argument of \begin to the number of references
@@ -283,5 +292,7 @@
 		
 		%\end{thebibliography}
 
+		% BIOGRAPHY
+		%\input{./biography/english}
 
 	\end{document}

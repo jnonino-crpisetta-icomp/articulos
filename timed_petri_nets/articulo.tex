@@ -97,7 +97,7 @@
 		\ifCLASSINFOpdf
    			\usepackage[pdftex]{graphicx}
   				% declare the path(s) where your graphic files are
-				% \graphicspath{{../pdf/}{../jpeg/}}
+				  \graphicspath{{img/}}
 				% and their extensions so you won't have to specify these with
 				% every instance of \includegraphics
 				% \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
@@ -327,43 +327,37 @@
 %	COMIENZO DEL DOCUMENTO
 	\begin{document}
 
-	%	TITULO y AUTORES
-		\input{titulo_autores}
+		% TITULO y AUTORES
+		\input{./title_authors/espanol}
 
-	%	RESUMEN
-		\input{resumen}
+		% RESUMEN
+		\input{./abstract/espanol}
 
-	%	INTRODUCCION
-		\input{introduccion}
+		% INTRODUCCION
+		\input{./introduction/espanol}
 		
-	%	REDES DE PETRI DE BAJO NIVEL
-	%	\input{redes_de_petri}
-	
-	%	REDES DE PETRI TEMPORALES
-		\input{redes_de_petri_temporales}	
-	
-	%	REDES DE PETRI TEMPORALES
-		\input{redes_de_petri_temporizadas}
+		% PETRI NETS
+		%\input{./basic_petri_nets/espanol}
+		\input{./petri_nets/espanol}
+		\input{./timed_petri_nets/espanol}
 
-	%	IP core
-		\input{ip_core}
+		% ARQUITECTURA
+		%\input{./architecture/espanol}
+		\input{./ip_core/espanol}
 	
-	%	Analisis de Rendimiento
-		\input{analisis_rendimiento}
-		
-	%	CRECIMIENTO DEL IP CORE
-		\input{crecimiento_ip_core}		
+		% Analisis de Rendimiento
+		\input{./performance/espanol}
 			
-	%	CONCLUSION
-		\input{conclusion}
+		% CONCLUSION
+		\input{./conclusion/espanol}
 
-	%	APENDICES
-		\input{apendices}
+		% Conference papers DO NOT normally have an appendix
+		%\input{./appendix/espanol}
 
-	%	AGRADECIMIENTOS
-		\input{agradecimientos}
+		% AGRADECIMIENTOS
+		\input{./acknowledgment/espanol}
 
-	%	REFERENCIAS
+		% REFERENCIAS
 		% Can use something like this to put references on a page
 		% by themselves when using endfloat and the captionsoff option.
 		\ifCLASSOPTIONcaptionsoff
@@ -383,12 +377,12 @@
 		% http://www.michaelshell.org/tex/ieeetran/bibtex/
 			\bibliographystyle{IEEEtran}
 			% argument is your BibTeX string definitions and bibliography database(s)
-			\bibliography{./bib/referencias}
+			\bibliography{./referencias}
 		%\bibitem{PaperProcesador}{Micolini, Orlando; Pereyra, Martan M.; Gallia, Nicolas A.; Alasia, Melisa A. Sistema Multi-Core 
 		%Heterogeneo, sincronizado por un Procesador de Petri sobre FPGA.}
 
-	%	BIOGRAFIAS
-		\input{biografias}
+		% BIOGRAFIAS
+		\input{./biography/espanol}
 
 %	FIN DEL DOCUMENTO
 	\end{document}
