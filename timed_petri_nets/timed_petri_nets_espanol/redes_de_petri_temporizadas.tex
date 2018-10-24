@@ -1,0 +1,140 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%																					%
+%	TRABAJO: Paper Redes de Petri Temporizadas										%
+%																					%
+%		Titulo: 	Ejecucion de Redes de Petri Temporizadas						%
+%																					%
+%		Autores:	Julian Nonino													%
+%					Carlos Renzo Pisetta											%
+%					Orlando Micolini												%
+%																					%
+%	Seccion: Redes de Petri Temporizadas											%	
+%	Archivo: redes_petri_temporizadas.tex											%
+%																					%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	REVISIONES																		%
+%																					%
+%		19/10/2012																	%
+%			Julian Nonino															%
+%				Creacion de este archivo											%
+%		04/04/2013																	%
+%			Renzo Pisetta															%
+%				Modifica															%
+%																					%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Redes de Petri Temporizadas}
+			En estas redes, cada transición tiene asociado un parámetro $[a]$ que establece la duración de la 
+			transición, es decir la duración del intervalo entre que se extraen los tokens de las plazas de 
+			entrada y se colocan los tokens en las plazas de salida.
+					En ésta sección se decribirán las \textbf{\emph{Redes de Petri Temporizadas}} como la red \emph{B} 
+		de la figura \ref{fig:Petri16}).
+		
+		\subsection{Definición matemática}
+		
+			Una \emph{Red de Petri Marcada Temporizada}, se define matemáticamente como una 7-tupla de la siguiente 
+			manera:  
+			\begin{equation*}
+				PN = \{P, T, I^-, I^+, H, m_0, Timer\}
+			\end{equation*}
+			Dónde,
+			\begin{itemize}
+				\item \textbf{P} es un conjunto finito y no vacío de plazas.
+				\item \textbf{T} es un conjunto finito y no vacío de transiciones.
+				\item \textbf{$I^+$} e \textbf{$I^-$} son las matrices de incidencia positiva y negativa respectivamente.
+					\begin{equation*}
+						P×T\rightarrow \mathbb{Z}
+					\end{equation*}
+				\item H es la matriz de arcos inhibidores.
+					\begin{equation*}
+						P×T\rightarrow\{0,1\}
+					\end{equation*}
+				\item $m_0$ es el marcado inicial de la red.
+					\begin{equation*}
+						P\rightarrow \mathbb{N}
+					\end{equation*}
+				\item es el conjunto de valores de duración asociados a cada transición.
+					\begin{equation*}
+						T\rightarrow \mathbb{Q}^+
+					\end{equation*}
+			\end{itemize}
+		
+		El conjunto de valores \textbf{\emph{Timer}} asocia un valor racional \emph{duración} a cada transición. De 
+		manera tal que $Timer(t)=duracion$. Donde $t$ es una transición perteneciente a $T$.
+		
+		Dado que duración es una referencia de tiempo, se debe cumplir que $0 \leq duracion \langle \infty$.
+		
+			\subsection{Estados en una Red de Petri con Tiempo}
+			
+			En estas Redes de Petri, el estado de la red queda definido por el vector de marcado $m$ de la 
+			misma y por un vector $Intervalo$ que lleva la marca de tiempo de cada transición. Por lo tanto 
+			el estado de una Red de Petri con Tiempo queda definido por:
+			\begin{equation*}
+				E = (m_0,Intervalo)
+				\label{eq:estado_con_time}
+			\end{equation*}
+			
+			Ahora, al disparar una transición $t$ en un instante $w_j$ produce un cambio desde el estado 
+			$E = (m,Intervalo)$ a un nuevo estado $E' = (m',Intervalo')$. El nuevo marcado $m'$ se determina 
+			con la ecuación de estado vista anteriormente. Por otro lado, la actualización del intervalo para 
+			cada transición $k$ sigue las siguientes reglas:
+			\begin{itemize}
+				\item $Intervalo'(k) = \infty$ si la transición $k$ no está sensibilizada.
+				\item $Intervalo'(k) = Intervalo(k) + 1$ si $k\neq t$, en el marcado $m$ esta sensibilizada 
+					y sigue estándolo en el marcado $m'$. 
+				\item $Intervalo'(k) = 0$ si $k = t$ o $k$ comienza a estar sensibilizada en el marcado $m'$.
+			\end{itemize}
+		
+		\subsection{Regla de disparos y estados en una Red de Petri Temporizada} 
+		
+			En una \emph{Red de Petri Temporizada}, el disparo de una transición implica tres etapas.
+			\begin{enumerate}
+				\item Al momento que se sensibiliza la transición, se extrae la cantidad de tokens de las plazas 
+					de entrada indicada por el arco que los une a dicha transición. Además, se marca la transición
+					como no sensibilizada.
+					\begin{equation*}
+						m_{i+1} = m_i +I^- × d
+					\end{equation*}
+					Se genera un nuevo estado provisorio formado a partir la extracción de los tokens que sensibilizaban 
+					la transición que se esta disparando. También, en ese instante se comienza la cuenta de tiempo.
+				\item Se espera el tiempo indicado por el valor de duración de la transición. Con la transición 
+					marcada como desensibilizada, se espera hasta que la cuenta de tiempo, que comenzó al 
+					extraerse los tokens, llegue al valor indicado por $Timer(d)$.
+				\item Transcurrido el tiempo indicado por el valor de duración asociado a la transición se colocan los tokens 
+					en las plazas de salida según como indican los arcos que unen a las transiciones con dichas plazas.
+					\begin{equation*}
+						m_{i+2} = m_{i+1} +I^+ × d
+					\end{equation*}
+				
+			\end{enumerate}		
+		\subsection{Determinación de disparos posibles}
+	
+		Para que un disparo sea posible en una Red de Petri, debe cumplir las condiciones dadas por que todas 
+		las transiciones de las cuales toma tokens tengan la cantidad necesaria de tokens, que las plazas a las 
+		cuales esta conectada con arcos inhibidores no tengan tokens y que las plazas en las cuales depositan 
+		tokens no superen los limites impuestos por las cotas en las plazas.
+		En una Red de Petri Temporizada, al cumplirse las condiciones antes mencionadas, se dice que la transición 
+		esta \textbf{\emph{sensibilizada}}, entonces, se ejecuta la ecuación de estado de la Red de Petri utilizando 
+		la matriz $I^-$. De esta manera, se remueven todos los tokens de las plazas de entrada.
+			
+			\begin{equation}
+				m_{i+1} = m_i + I^+ × \delta
+			\end{equation}
+
+		Dónde $\delta$ es el vector de disparo que se desea ejecutar.
+		A partir de dicho momento, la marca de tiempo asociada a la transición comienza a incrementarse según su 
+		vector de incrementos de tiempo. Cuando esta marca de tiempo alcanza el valor indicado por el \textbf{\emph{
+		vector duración}}. Cuando esto ocurre, el disparo ya esta habilitado para ser ejecutado completamente. 
+		Esto se hace ejecutando la ecuación de estado con la matriz de incidencia positiva, esto implica poner los tokens en 
+		todas las plazas de salida.
+		
+			\begin{equation}
+				m_{i+1} = m_i + I^- × \delta
+			\end{equation}
+
+		Durante el proceso de carga y en el instante en el cual este termina, las marcas de tiempo de todas las 
+		transiciones valen cero. 
+		Luego, a cada ciclo de reloj, si la transición se sensibilizó y logo ejecutar la primera etapa del disparo, 
+		la marca de tiempo se incrementa la cantidad de unidades que indica el \textbf{\emph{vector de incrementos de marcas 
+		de tiempo}}.
+		La marca de tiempo vuelve a cero solo cuando la transición completa ambas fases de su disparo.

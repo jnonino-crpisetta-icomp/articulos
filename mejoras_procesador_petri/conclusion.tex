@@ -1,0 +1,26 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%																					%
+%	TRABAJO: Paper Mejoras en el procesador de Redes de Petri						%
+%																					%
+%		Titulo: 	Soft Core parametrizable con procesamiento de Redes de Petri	%
+%																					%
+%		Autores:	Julian Nonino													%
+%					Carlos Renzo Pisetta											%
+%					Orlando Micolini												%
+%																					%
+%	Seccion: Conclusion																%	
+%	Archivo: conclusion.tex															%
+%																					%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Conclusiones}
+
+	En éste trabajo se presentó un nuevo procesador de Petri y se realizó un IP Core parametrizable 
+	que verifica y resuelve una ejecución en dos ciclos desde que entra en la cola de entrada, hasta 
+	que es depositado en la cola de salida. 
+
+	La nueva capacidad de interrumpir permite un nuevo método de espera no activo, sin eliminar el 
+	método por consulta que utilizaba el diseño anterior. 
+	Las transiciones automaticas permite, la evolución del sistema sin la necesidad de pedir un disparo 
+	desde el exterior, y las cotas permite acotar cada plaza a un número determinado de tokens simplemente 
+	cargando los datos desde el software, sin la necesidad de modificar el HDL.

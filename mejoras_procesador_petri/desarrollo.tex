@@ -1,0 +1,217 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%																					%
+%	TRABAJO: Paper Mejoras en el procesador de Redes de Petri						%
+%																					%
+%		Titulo: 	Soft Core parametrizable con procesamiento de Redes de Petri	%
+%																					%
+%		Autores:	Julian Nonino													%
+%					Carlos Renzo Pisetta											%
+%					Orlando Micolini												%
+%																					%
+%	Seccion: Desarrollo																%	
+%	Archivo: desarrollo.tex															%
+%																					%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{desarrollo}
+
+	Basados en los diseños previos se desarrolló un IP Core con las mismas funcionalidades que su 
+	predecesor realizado en VHDL utilizando Verilog.
+	Esto fue motivado debido a las sintaxis semejantes a C y su capacidad de expresividad. Este diseño 
+	permite superar algunos limitantes del procesador de Petri original en cuanto a la parametrizacion.
+	De esta manera se puede sintetizar procesadores de petri a medida, variando el tamaño máximo de 
+	las estructuras de datos internas.
+
+	\subsection{Semantica}
+		
+		La semantica que posibilitó esta implementacion relaciona el marcado con el estado del sistema, 
+		mientras que los disparos de una transición se asocian con situaciones que desencadenan un 
+		cambio de estado en el sistema, como son: la necesidad de un recurso, sincronización.
+		Por lo tanto, se hacen estas estas peticiones, desde el software, al procesador de petri y 
+		éste responde con un disparo ejecutado a la salida cuando esta accion es posible.
+
+	\subsection{Algoritmo de Ejecución}
+		
+		Basados en la teoria descrita, se creó un algoritmo de ejecución de disparos en una Red de 
+		Petri, que se describe a continuación. Es sintetizable en hardware y requiere únicamente 2 
+		ciclos de reloj para ejecutar todos los pasos, y a la vez permita un diseño parametrizable 
+		en cuanto al tamaño y cantidad de elementos que soporte.\newline
+		
+		\begin{enumerate}
+			\item Espera de disparo en Cola de entrada de disparos.
+			\item Llegado el disparo, se calcula un vector binario de longitud cantidad de transiciones 
+				con un único 1 en el lugar correspondiente al número de disparo, en función al número 
+				de transición que contenga. Este vector se utiliza para incrementar los contadores de 
+				disparos.
+				Son considerados disparos en espera.
+			\item Se calcula todos los posibles resultados para todos los disparos de la red y se 
+				confecciona una matriz resultado donde cada columna $C_i$ representa el nuevo marcado, 
+				si la transición $T_i$  se disparara.
+			\item Se crea una matriz de signos auxiliar con los signos correspondientes a cada elemento 
+				de la matriz resultado. 
+			\item Se crea una matriz de inhibición auxiliar en función del marcado actual y la Matriz 
+				de Inhibición, lo que determina las plazas con arcos inhibidores que tienen tokens.
+			\item Se crea una matriz de cotas en función de la matriz resultados y las cotas de las 
+				plazas, lo cual determina cuál fue superada para cada plaza por cada posible resultado.
+			\item Se crea un vector en el cual cada elemento, corresponde a una columna de la matriz 
+				de signos y determina si tal transición es o no posible en función si algún elemento 
+				de su resultado es negativo.
+			\item Se crea un vector en el cual cada elemento, corresponde a una columna de la matriz 
+				de inhibición y determina las transiciones que no pueden ser disparada debido a arcos 
+				inhibidores.
+			\item Se crea un vector en el cual cada elemento, corresponde a una columna de la matriz 
+				de cotas el cual determina qué transiciones no pueden ser disparadas puesto que, de 
+				hacerlo, superarían las cotas de las plazas.
+			\item En función a los vectores creados en los puntos 7, 8 y 9, se crea un vector que 
+				determina los disparos posibles. 
+			\item Para determinar las transiciones a disparar, se unen los disparos pendientes y las 
+				transiciones automáticas. Luego, en función de los disparos posibles y que la cola de 
+				disparos de salida no esté llena, se actualiza el marcado actual a partir del resultado 
+				obtenido en el punto 3, considerando la mayor prioridad al índice de mayor valor. 
+			\item Se incrementa contador de cola de salida correspondiente a transición ejecutada.
+		\end{enumerate}	
+
+	\subsection{Matriz de Prioridades}
+		
+		La forma en la que esta implementado el IPCore posee una prioridad estática donde un disparo 
+		$T_i$ tiene un prioridad mayor que un disparo $T_j$, siempre que $j<i$. Para cambiar esto se 
+		utiliza la matriz de prioridades, la cual permite tener distintos ordenes de prioridad en 
+		función del marcado actual del sistema. De esta manera se puede definir para los casos necesario 
+		una prioridad especifica, y una por defecto para cualquier otro marcado.
+		Actualmente, debido la matriz y mecanismos para darle soporte, ocupan un tamaño considerable 
+		por lo cual se siguen investigando nuevos diseños para implementarla.
+	
+	\subsection{Plazas Acotadas}
+
+		Las plazas acotadas no solo representan una propiedad del sistema que restringe el valor 
+		máximo de tokens en una plaza. Si bien este valor de por si ya esta limitado por la implementación 
+		en hardware con un número finito de bits es posible limitarlas aún más sin necesidad de alterar 
+		el hardware.
+		La implementación en hardware verifica que los posibles marcados futuros no supere las cotas 
+		establecidas y dado el caso impedir que una transición sea disparada.
+ 
+	\subsection{Colas de Disparos}
+
+		Las colas de disparos son dos: una, para los disparos de entrada que esperan por ser ejecutados
+		en cuanto la red lo permita; y la otra, para los disparos de salida que ya han sido ejecutados
+		y esperan a que el proceso que solicitó su ejecución los extraiga.
+	
+		La solucion más natural para este tipo de problemas es una cola FIFO la cual mantiene el orden 
+		de los disparos, con el uso de punteros para determinar el estado de la pila y donde almacenar 
+		el disparo antes de poder ser procesado.
+		Realizar este tipo de colas en hardware es dificultosa y se encuentra muy limitada en la 
+		cantidad de disparos en espera que puede almacenar y el tiempo que demanda la operaciones. 
+		Por esto se desarrolló una implementacion que se ajuste más a esta aplicacion, estas nuevas 
+		colas denominadas contadores de disparo fueron la solucion implementada.
+	   	
+		Estas colas se realizan con un contador por cada transición, el cual indica cuántos disparos 
+		pendientes o ya ejecutados existen para dicha transición. Además, existe un vector binario
+		que indica si la cola de una determina transición esta vacía o tiene algún valor (Figura 
+		\ref{fig:diseno03}).
+		Esta implementación obedece a la necesidad de insertar o extraer los disparos en un ciclo de 
+		reloj y además, poder contemplar todas las solicitudes de disparos de las distintas transiciones 
+		en paralelo.
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=2.5in]{./img/diseno03}
+			\caption{Esquema de las colas de disparos}
+			\label{fig:diseno03}
+		\end{figure}
+		Cada una de las posiciones del vector de estado de la cola indican si esta vacío o no. Esto 
+		se hace de la siguiente manera (Figura \ref{fig:diseno04}):
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=2.5in]{./img/diseno04}
+			\caption{Registro que indica si las colas de disparos están vacías o no}
+			\label{fig:diseno04}
+		\end{figure}
+		
+		Un \emph{uno} en este vector indica que la cola contiene al menos un elemento.	
+		Además, se implementa otro registro de estado que indica si la cola esta llena o no. Este 
+		registro se implementó de la siguiente manera. Un \emph{uno} en este vector indica que la 
+		cola esta llena y no puede recibir más elementos (Figura \ref{fig:diseno05}).		
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=2.5in]{./img/diseno05}
+			\caption{Registro que indica si las colas de disparos están llenas o no}
+			\label{fig:diseno05}
+		\end{figure}
+			
+		Al realizar las colas de esta manera, se puede almacenar más disparo por transición en un 
+		espacio menor y lograr que un disparo necesite 2 ciclos de reloj: desde que llega al procesador 
+		de petri hasta que sale, aparece en la cola de salida. 	
+				
+	\subsection{Transiciones automáticas}
+				
+		Este tipo de transiciones son ejecutadas sin la necesidad de ser solicitadas. Se instancian 
+		como un vector binario donde cada elemento representa una transición . Un \emph{uno} en algún 
+		elemento indica que la trancicion de igual índice es automática, es decir, al momento que se 
+		este disparo es posible se disparara. Su ejecución se realiza con igual prioridad que los 
+		disparos pedidos, de manera tal que implique únicamente unirlos en un solo dato antes de 
+		resolver los disparos (Figura \ref{fig:diseno09}).
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=2.5in]{./img/diseno09}
+			\caption{Registro que indica si las colas de disparos están llenas o no}
+			\label{fig:diseno09}
+		\end{figure}
+	
+	\subsection{Tranciciones sin notificacion}
+		
+		Durante el modelado surjen algunos disparos los cuales son necesarios para la evolucion del 
+		sistema pero innecesarios para que el programa espere su resolucion. Por esto se desarrolló 
+		un módulo que controla los disparos ya ejecutados, antes de ser puestos en cola de salida.
+	
+	\subsection{Manejo de Interrupciones}	
+		
+		Una interrupción es un mecanismo por el cual un evento -en éste caso, un disparo ejecutado- 
+		puede alterar la ejecución de un programa. De esta manera, un proceso puede continuar su 
+		ejecución hasta que el Procesador de Redes de Petri le notifique que el disparo por el cual 
+		esperaba, ha sido ejecutado.
+		 
+		La arquitectura del procesador de Redes de Petri, al incorporar el manejo de interrupciones, 
+		se ve afectada por el agregado de tres elementos.
+		\begin{itemize}
+		  	\item Un vector \textbf{\emph{Máscara de Interrupción}}, cuyo objetivo es determinar cuáles 
+		  		son las transiciones que al dispararse, generarán interrupciones.
+		  	\item Un componente generador de interrupciones que contiene la lógica encargada de determinar 
+		  		en qué momento generar la señal la interrupción y de especificar como será dicha señal.
+		  	\item Un puerto físico por el cual enviar la señal de interrupción.
+		\end{itemize}
+		
+		La figura \ref{fig:diseno43} muestra un diagrama de componentes del módulo \emph{Generador de 
+		Interrupciones}. La siguiente sección explicará funcionamiento de este módulo y además, el 
+		funcionamiento del sistema en su conjunto cuando el procesador de Redes de Petri tiene la 
+		capacidad de interrumpir. 
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=2.5in]{./img/diseno43}
+			\caption{Diagrama de componentes del Generador de Interrupciones}
+			\label{fig:diseno43}
+		\end{figure}
+		
+		Básicamente, el generador de interrupciones verifica si	alguna de las transiciones que están 
+		habilitadas para producir interrupciones, se ha ejecutado. Cuando esto sucede, genera una señal 
+		en \emph{1} de un ciclo de duración o cambio de nivel, según sea necesario para trabajo por 
+		flanco o nivel. Además, determina el índice de dicha transición.		
+
+		Para limitar el número de transiciones que al ser disparas generan una interrupción, se 
+		utiliza el vector de máscara de interrupciones que determina cuáles transiciones generan 
+		interrupción y cuáles no.
+		Para que el disparo de una transición genere una interrupción, el bit correspondiente en el 
+		vector de máscara de interrupciones debe estar en \emph{1}, de lo contrario se 
+		encuentra enmascarada y no generará interrupción alguna. Por lo tanto, para estas transiciones, 
+		es tarea del usuario preguntar si ya ha sido ejecutada periódicamente o cuando lo crea necesario.
+		
+	\subsection{Lectura en con decremento}
+		
+		Se creo un registro el cual muestra todos los disparos ejecutados y luego de ser leido decrementa
+		en uno todos las colas de salida que tenian al menos un disparo en ellas. Este registro permite un
+		nuevo mecamismo de uso, en el cual el programa obtiene todos los disparos realizando una unica lectura
+		y luego administrarlos.
+					  
+		
+		  
+	
+				

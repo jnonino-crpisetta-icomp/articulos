@@ -1,0 +1,52 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%																					%
+%	TRABAJO: Paper Mejoras en el procesador de Redes de Petri						%
+%																					%
+%		Titulo: 	Soft Core parametrizable con procesamiento de Redes de Petri	%
+%																					%
+%		Autores:	Julian Nonino													%
+%					Carlos Renzo Pisetta											%
+%					Orlando Micolini												%
+%																					%
+%	Seccion: ANALSIS DE RENDIMIENTO													%	
+%	Archivo: analisis_rendimiento.tex												%
+%																					%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \section{Análisis de Rendimiento}
+ 		Una vez terminado el IP Core para comprobar su correcto funcionamiento y ver si éste realmente 
+ 		tiene una mejora en los tiempos de sincronización, se realizaron mediciones para distinto número
+ 		de iteraciones, tanto para el Procesador de Petro como para Semáforos. La elección de este segundo
+ 		método de sincronización se basa en que son el mecanismo más ligero para realziar éstas tareas.
+ 		A partir de estas mediciones se realizó la gráfica de la Figura \ref{fig:resultados13} 
+ 		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=3in]{./img/resultados13}
+			\caption{Tiempos de sincronización procesador de Redes de Petri vs. Semáforos}
+			\label{fig:resultados13}
+		\end{figure}		
+		
+		Se puede observar que, para todos los casos, el procesador de Petri es aproximadamente cuatro veces
+		más rapido que los Semáforos.
+		Esta medicion se realizo con tiempos iniciales nulos, de manera que el rendimiento es el mismo obtenido
+		en el procesador de Redes de Petri sin semantica temporal.
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=3in]{./img/new01}
+			\caption{Ejecucion transicion con tiempo}
+			\label{fig:new01}
+		\end{figure}	
+		
+		En la Figura \ref{fig:new01} se puede observar por que se analiza el rendimiento sin tener en cuenta
+		el tiempo. Esto se debe a el tiempo EFT de una transicion es parte del modelo, es decir, el mismo que esperara la implementacion
+		con semaforos; a la vez	el procesador necesita unicamente un semi-ciclo de reloj desde que el contador alcanza el valor hasta que se ve 
+		representada a la salida y esta demora es despreciable en relación con el tiempo que tiene un $\Delta$T de 
+		un ciclo de reloj.
+		
+		
+		 
+		
+		
+		
+		

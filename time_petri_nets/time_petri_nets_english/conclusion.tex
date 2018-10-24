@@ -1,0 +1,23 @@
+\section{Conclusion and Contributions}
+
+	In this paper, a Time Petri Processor is developed, which decouples the concurrency from sequential 
+	processing, it has the following particularities:
+	\begin{itemize}
+  		\item On tasks, where measurements have been done, the processor allows synchronization of 
+  				threads, with improvements up to 70\%.
+		\item There is a direct relationship between the graph and the processor program, since this 
+				is programmed with the state equation's matrixes and vectors.
+		\item Multiple are admitted shots simultaneously in the same transition.
+		\item Allows programming priorities since the shots are solved in parallel and are selected 
+				according to priorities module.
+		\item Decides if the shot can be executed or not in 2 clock cycles.
+		\item The system programming is easier to do, since the processes are decoupled from the concurrency.
+		\item This processor can be programmed at run time, thus it is possible to decrease the size 
+				of the matrix in hardware by using spatial and temporal locality.
+	\end{itemize}
+	
+	The difficulty of this implementation is because of the growth of the resources needed by the 
+	increase of places and transitions. This implies that is difficult to implement a system for 
+	dimensions greater than 32x32 in ZedBoard, to mitigate this difficulty new designs have been 
+	proposed and are being worked on, these are: Petri Net Processor with pipeline architecture and 
+	support for Hierarchical Petri Nets.

@@ -1,0 +1,59 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%																					%
+%	TRABAJO: Paper Mejoras en el procesador de Redes de Petri						%
+%																					%
+%		Titulo: 	Soft Core parametrizable con procesamiento de Redes de Petri	%
+%																					%
+%		Autores:	Julian Nonino													%
+%					Carlos Renzo Pisetta											%
+%					Orlando Micolini												%
+%																					%
+%	Seccion: ANALSIS DE RENDIMIENTO													%	
+%	Archivo: analisis_rendimiento.tex												%
+%																					%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \section{Análisis de Rendimiento}
+ 		Para comprobar  correcto funcionamiento del IP Core y analisar los tiempos de sincronización, se 
+ 		realizaron mediciones para distinto número de iteraciones. Luego se compararo el Procesador de Petri 
+ 		con una implementación utilizando semáforos, ambos resolviendo un mismo problema. La elección de este 
+ 		segundo método de sincronización se basa en que son el mecanismo más ligero para realizar éstas tareas.
+ 		A partir de estas mediciones se realizó la gráfica de la Figura \ref{fig:resultados13} 
+ 		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=3in]{./img/resultados13}
+			\caption{Tiempos de sincronización procesador de Redes de Petri vs. Semáforos}
+			\label{fig:resultados13}
+		\end{figure}		
+	
+		Se puede observar que, para todos los casos, el procesador de Petri es aproximadamente cuatro veces
+		más rapido que los Semáforos.
+		
+		Esta medicion se realizó con tiempos $\tau$ nulos, de manera que el rendimiento es el mismo obtenido
+		en el procesador de Redes de Petri sin semántica temporal. Esto es valido ya que el tiempo de una 
+		transición es parte del modelo ,es decir, es el mismo para el procesador de petri como para la 
+		implementeción con semáforos. 
+		
+		Ademas como se observa en la  Figura \ref{fig:timed}, el procesador necesita únicamente un 
+		semi-ciclo de reloj, desde que el contador alcanza el valor $\tau$ hasta que el disparo se coloca
+		en la cola de salida. La demora introducida es despreciable en relación con
+		el tiempo que tiene un $\Delta$T de un ciclo de reloj.	 
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=3.5in]{./img/timed}
+			\caption{Tiempos de ejecución2 }
+			\label{fig:timed}
+		\end{figure}
+
+	Teniendo en cuenta la latencia despreciable y tomando el tiempo como parte del modelo
+	es posible analizar el rendimiento sin tener en cuenta	el tiempo.
+		
+				
+		
+		 
+		
+		
+		
+		

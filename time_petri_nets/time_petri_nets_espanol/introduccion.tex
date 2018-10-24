@@ -1,0 +1,180 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%																					%
+%	TRABAJO: Paper Redes de Petri con Tiempo										%
+%																					%
+%		Titulo: 	Ejecucion de Redes de Petri con Tiempo							%
+%																					%
+%		Autores:	Julian Nonino													%
+%					Carlos Renzo Pisetta											%
+%					Orlando Micolini												%
+%																					%
+%	Seccion: Introduccion															%	
+%	Archivo: introduccion.tex														%
+%																					%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	REVISIONES																		%
+%																					%
+%		18/10/2012																	%
+%			Julian Nonino															%
+%				Creacion de este archivo											%
+%																					%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introducción}
+	% The very first letter is a 2 line initial drop letter followed
+	% by the rest of the first word in caps.
+	% 
+	% form to use if the first word consists of a single letter:
+	% \IEEEPARstart{A}{demo} file is ....
+	% 
+	% form to use if you need the single drop letter followed by
+	% normal text (unknown if ever used by IEEE):
+	% \IEEEPARstart{A}{}demo file is ....
+	% 
+	% Some journals put the first two words in caps:
+	% \IEEEPARstart{T}{his demo} file is ....
+	% 
+	% Here we have the typical use of a "T" for an initial drop letter
+	% and "HIS" in caps to complete the first word.
+		%\IEEEPARstart{T}{his} demo file is intended to serve as a ``starter file''
+		%for IEEE journal papers produced under \LaTeX\ using
+		%IEEEtran.cls version 1.7 and later.
+		% You must have at least 2 lines in the paragraph with the drop letter
+		% (should never be an issue)
+		%I wish you the best of success.
+		
+	\IEEEPARstart{D}{esde} hace tiempo, los sistemas de computación son multiprogramados, esto significa que en 
+	un momento dado existen múltiples procesos cooperando por un fin común y/o compitiendo por recursos limitados.
+	En un sistema monoprocesador, se produce una intercalación de instrucciones de diversos procesos concurrentes 
+	aparentando una ejecución paralela.
+	Esto, tiene el problema de la sincronización para el uso de recursos, en la mayoría de los casos un proceso no 
+	podrá compartir un recurso mientras lo usa, por lo tanto, los demás deben bloquearse y esperar hasta que el 
+	recurso sea liberado. Además, si los procesos comparten datos, se debe asegurar que solo uno de ellos lo 
+	modifique en un mismo instante. Por ello, para que el sistema funcione correctamente y se conserve la 
+	integridad de los datos se deben utilizar diversos mecanismos de sincronización y de exclusión mutua.
+	Sumado a esto, en la actualidad, la mayoría de los sistemas incluyen múltiples procesadores, por ende, 
+	los problemas anteriormente mencionados se multiplican ya que la ejecución paralela es real e intercalada.
+
+	Los problemas generados por la ejecución concurrente son: la necesidad de exclusión mutua, condiciones de 
+	sincronización, interbloqueos e inanición. Para detectar estos problemas se debe modelar el sistema. 
+	Una de las herramientas para modelar procesos concurrentes son las máquinas de estado. El problema de esta 
+	herramienta, es la distancia que existe entre el modelo y la implementación, lo que en consecuencia, nos 
+	dificulta asegurar que la implementación cumpla con las propiedades validadas y verificadas en el modelo. 
+
+	En el Laboratorio de Arquitecturas de Computadoras desde hace tiempo se trabaja con otra herramienta para 
+	modelar sistemas concurrentes. Ésta, es una herramienta gráfica con una base matemática formal y se conoce 
+	como Redes de Petri.
+	Las Redes de Petri, logran modelar los diferentes estados de los sistemas reactivos y las posibles 
+	transiciones entre ellos. Este modelo gráfico puede ser traducido a una ecuación de estado que definirá el 
+	estado siguiente del sistema según el estado actual y de las transiciones que desean dispararse en forma 
+	algebraica. Pero el hecho más importante, es que estas redes no solo sirven para la simulación sino, que 
+	además, pueden ser ejecutadas, con lo cual, la distancia entre el modelo y la implementación no existe. 
+	Modelando con Redes de Petri, el funcionamiento y las propiedades del sistema pueden ser asegurados aún 
+	antes de la implementación.
+	Hay que destacar la importancia del estudio de las Redes de Petri, ya que en los últimos diez años se 
+	han realizado 10294 publicaciones con referato.
+		
+%\hfill mds
+%\hfill January 11, 2007
+
+	\subsection{Objetivos}
+		\subsubsection{Objetivo principal}
+			El objetivo principal de este trabajo es diseñar e implementar un procesador de Redes de Petri
+			que sea capaz de procesar Redes de Petri Temporales para la  semántica \textbf{Redes de Petri con Tiempo}. 
+			Manteniendo la condición de programación directa entre el modelo y la implementación.
+
+% needed in second column of first page if using \IEEEpubid
+%\IEEEpubidadjcol
+
+		\subsubsection{Objetivos secundarios}
+			Los objetivos secundarios de este trabajo son:
+			\begin{itemize}
+   				\item Analizar las Redes de Petri Temporales con el fin de evaluar su implementación 
+   						por hardware.
+   				\item Rediseñar el procesador de Redes de Petri con el objetivo de posibilitar la 
+   						inserción de parámetros temporales.
+   				\item Implementar el procesador de Redes de Petri como un IP core.
+   			\end{itemize}	
+
+
+% An example of a floating figure using the graphicx package.
+% Note that \label must occur AFTER (or within) \caption.
+% For figures, \caption should occur after the \includegraphics.
+% Note that IEEEtran v1.7 and later has special internal code that
+% is designed to preserve the operation of \label within \caption
+% even when the captionsoff option is in effect. However, because
+% of issues like this, it may be the safest practice to put all your
+% \label just after \caption rather than within \caption{}.
+%
+% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
+% option should be used if it is desired that the figures are to be
+% displayed while in draft mode.
+%
+%\begin{figure}[!t]
+%\centering
+%\includegraphics[width=2.5in]{myfigure}
+% where an .eps filename suffix will be assumed under latex, 
+% and a .pdf suffix will be assumed for pdflatex; or what has been declared
+% via \DeclareGraphicsExtensions.
+%\caption{Simulation Results}
+%\label{fig_sim}
+%\end{figure}
+
+% Note that IEEE typically puts floats only at the top, even when this
+% results in a large percentage of a column being occupied by floats.
+
+
+% An example of a double column floating figure using two subfigures.
+% (The subfig.sty package must be loaded for this to work.)
+% The subfigure \label commands are set within each subfloat command, the
+% \label for the overall figure must come after \caption.
+% \hfil must be used as a separator to get equal spacing.
+% The subfigure.sty package works much the same way, except \subfigure is
+% used instead of \subfloat.
+%
+%\begin{figure*}[!t]
+%\centerline{\subfloat[Case I]\includegraphics[width=2.5in]{subfigcase1}%
+%\label{fig_first_case}}
+%\hfil
+%\subfloat[Case II]{\includegraphics[width=2.5in]{subfigcase2}%
+%\label{fig_second_case}}}
+%\caption{Simulation results}
+%\label{fig_sim}
+%\end{figure*}
+%
+% Note that often IEEE papers with subfigures do not employ subfigure
+% captions (using the optional argument to \subfloat), but instead will
+% reference/describe all of them (a), (b), etc., within the main caption.
+
+
+% An example of a floating table. Note that, for IEEE style tables, the 
+% \caption command should come BEFORE the table. Table text will default to
+% \footnotesize as IEEE normally uses this smaller font for tables.
+% The \label must come after \caption as always.
+%
+%\begin{table}[!t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+%\caption{An Example of a Table}
+%\label{table_example}
+%\centering
+%% Some packages, such as MDW tools, offer better commands for making tables
+%% than the plain LaTeX2e tabular which is used here.
+%\begin{tabular}{|c||c|}
+%\hline
+%One & Two\\
+%\hline
+%Three & Four\\
+%\hline
+%\end{tabular}
+%\end{table}
+
+
+% Note that IEEE does not put floats in the very first column - or typically
+% anywhere on the first page for that matter. Also, in-text middle ("here")
+% positioning is not used. Most IEEE journals use top floats exclusively.
+% Note that, LaTeX2e, unlike IEEE journals, places footnotes above bottom
+% floats. This can be corrected via the \fnbelowfloat command of the
+% stfloats package.

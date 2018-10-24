@@ -1,0 +1,116 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%																					%
+%	TRABAJO: Paper Mejoras en el procesador de Redes de Petri						%
+%																					%
+%		Titulo: 	Soft Core parametrizable con procesamiento de Redes de Petri	%
+%																					%
+%		Autores:	Julian Nonino													%
+%					Carlos Renzo Pisetta											%
+%					Orlando Micolini												%
+%																					%
+%	Seccion: Marco Teórico															%	
+%	Archivo: marco_teorico.tex														%
+%																					%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Marco Teorico}
+	
+	\subsection{Redes de Petri}
+ 		
+ 		Una Red de Petri o Petri Net es un modelo gráfico, formal y abstracto útil para 
+ 		describir y analizar el flujo de información.
+ 		Conforma una herramienta matemática aplicable, especialmente, a los sistemas 
+ 		paralelos que requieran simulación y modelado de la concurrencia en los recursos 
+ 		compartidos. Existen trabajos previos donde se ha demostrado que es posible implementar 
+ 		sus formalismos en hardware \cite{paillertejeda}\cite{galliapereyra}
+
+		Las Redes de Petri constan de cuatro componentes fundamentales.Fig\ref{PN}
+
+		\begin{itemize}
+			\item Plazas: Permiten representar el estado del sistema. 
+    			Podrían definirse como variables de estado que toman valores enteros (cantidad de 
+    			tokens). Se representan con un círculo.
+			\item Transiciones: Representan el conjunto de sucesos que hacen que el estado del sistema 
+				cambie. Son representadas con un rectángulo.
+			\item Arcos: Los arcos indican las conexiones entre lugares y transiciones. Nunca unen 
+				dos lugares o dos transiciones en forma sucesiva. Pueden entrar o salir varios arcos 
+				de una misma transición o de un mismo lugar. Los arcos tienen asociado un ``peso'' 
+				que indica la cantidad de tokens que se consumen o generan al atravesarlo. El disparo 
+				de una transición retira tantos tokens de cada uno de sus lugares de entrada como lo 
+				indican los pesos de los arcos conectores y añade los tokens a sus lugares de salida 
+				como lo indican los pesos de los arcos de salida.
+			\item Tokens: Los tokens representan el valor específico de la condición o estado. Son 
+				graficados como un punto negro o un número natural o cero dentro de una plaza.
+		\end{itemize}
+
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=2.5in]{./img/RedPetri.png}
+			\caption{Red de Petri}
+			\label{PN}
+		\end{figure}
+ 
+		\subsubsection{Estructura de una Red de Petri}
+		
+			Una Red de Petri Marcada queda definida como una 5-tupla de la siguiente manera:
+
+			\begin{center}
+				$PN = \{P, T, I^-, I^+, m_0\}$ 
+			\end{center}
+
+			Donde:
+			\begin{itemize}
+				\item $\boldsymbol{P = \{p_1, p_2, p_3 \ldots p_m\}}$, conjunto de $m$ lugares con 
+					$m$ finito y distinto de cero.			
+				\item $\boldsymbol{T = \{t_1, t_2, t_3 \ldots t_n\}}$, conjunto de $n$ transiciones 
+					con $n$ finito y distinto de cero.
+				\item $\boldsymbol{I}$, matriz de incidencia. Esta matriz es de dimensiones $m×n$, 
+					y representa los pesos de los arcos, siendo sus valores positivos cuando el arco 
+					va desde una transición hacia una plaza; y negativos, los inversos. Así mismo, 
+					para representar la estructura, esta matriz de incidencia debe separarse en dos:
+					\begin{itemize}
+						\item $\boldsymbol {I-}$, matriz de incidencia negativa. Esta matriz es de 
+							dimensiones $m×n$ representa los pesos de los arcos que ingresan desde 
+							los lugares de P a las transiciones de T.
+						\item $\boldsymbol {I+}$, matriz de incidencia positiva. Esta matriz es de 
+							dimensiones $m×n$ representa los pesos de los arcos que salen desde las 
+							transiciones de T hacia los lugares de P.
+					\end{itemize}
+				\item $\boldsymbol {m_0}$ es el marcado inicial de la red, un vector de asignación 
+					de tokens a las plazas de la red, de esta forma se define la configuración inicial 
+					de los tokens de la red. Por ejemplo, puede definirse el marcado de una plaza como 
+					$m(i)$, lo que indica la cantidad de tokens ubicados en la plaza ``$i$''.
+					\newline
+			\end{itemize}
+
+		\subsubsection{Ejecución de una Red de Petri}
+
+			El comportamiento dinámico de una Red de Petri esta definido por la sensibilización y el 
+			disparo de sus transiciones.
+			\newline
+			\begin{itemize}
+  				\item Transición sensibilizada: Se dice que una transición $t_j$ está sensibilizada 
+  					si y solo si todas las plazas de entrada a la transición tienen una cantidad de 
+  					tokens igual o mayor al peso indicado por el arco que la une con la transición. 
+  					Formalmente:\newline
+  				\item Disparo de una transición: El disparo de una transición es lo que provoca que 
+  				el estado (marcado) de una Red de Petri cambie.
+  				\newline 
+			\end{itemize}
+
+		\subsubsection{Ecuación de estado de una Red de Petri}
+ 
+			La ecuación de estado determina el estado de la Red de Petri a cada instante, queda definida 
+			a partir de la matriz de incidencia y un vector de disparo que indica la transición o 
+			transiciones que deben ser disparadas.\newline
+			\begin{center}$m_{k+1}=m_k+I×\delta_k$\end{center}
+			Donde $m_{k+1}$ es el marcado futuro.  
+		\newline
+		\subsubsection{Plazas Acotadas}
+		
+			Un lugar $p_i$ se dice que es acotado si existe un número  $k\in \mathbb{N}$ tal que, para 
+			todo el conjunto de marcados alcanzables desde $m_0$, el número de marcas en $p_i$ no es 
+			más grande que k ($p_i$ se dice que es $k$-acotado). De esta manera una transición ademas 
+			de lo visto anteriormente, debe cumplir que ninguna plaza de salida supere su cota maxima 
+			$k$ luego de darse el disparo. De ser superado con un determinado disparo, este no se puede 
+			llevar a cabo.

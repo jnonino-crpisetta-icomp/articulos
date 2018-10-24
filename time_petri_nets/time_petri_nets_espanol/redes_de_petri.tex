@@ -1,0 +1,185 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%																					%
+%	TRABAJO: Paper Redes de Petri con Tiempo										%
+%																					%
+%		Titulo: 	Ejecucion de Redes de Petri con Tiempo							%
+%																					%
+%		Autores:	Julian Nonino													%
+%					Carlos Renzo Pisetta											%
+%					Orlando Micolini												%
+%																					%
+%	Seccion: Redes de Petri															%	
+%	Archivo: redes_petri.tex														%
+%																					%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	REVISIONES																		%
+%																					%
+%		19/10/2012																	%
+%			Julian Nonino															%
+%				Creacion de este archivo											%
+%		23/10/2012																	%
+%			Julian Nonino															%
+%				Terminada esta seccion												%
+%																					%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Redes de Petri}
+
+	Una Red de Petri o Petri Net es un modelo gráfico, formal y abstracto para describir y analizar el flujo de información.
+ 	Conforma una herramienta matemática que puede aplicarse especialmente a los sistemas paralelos que requieran simulación y 
+ 	modelado de la concurrencia en los recursos compartidos. Existen trabajos previos donde se ha demostrado 
+ 	que es posible implementar sus formalismos en hardware \cite{paillertejeda} \cite{galliapereyra}
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=2.3in]{./img/reddepetri.png}
+		\caption{Red de Petri}
+		\label{fig: petri}
+	\end{figure}
+
+	Las Redes de Petri constan de cuatro componentes fundamentales. \textit{Fig. \ref{fig: petri}}
+
+	\begin{itemize}
+		\item \textbf{Plazas}: Las plazas de una Red de Petri, permiten representar el estado del sistema. 
+     		Podrían definirse como variables de estado que toman valores enteros (cantidad de tokens). Se representan con un círculo.
+		\item \textbf{Transiciones}: Se grafican con un rectángulo. Representan el conjunto de sucesos que hacen que el estado del sistema
+     		cambie.
+		\item \textbf{Arcos}: Los arcos indican las conexiones entre lugares y transiciones. Nunca unen dos lugares o dos transiciones en forma
+      		sucesiva. Pueden entrar o salir varios arcos de una misma transición o de un mismo lugar.
+      		Los arcos tienen asociado un ``peso'' que indica la cantidad de tokens que se consumen o generan al atravesarlo. El disparo
+      		de una transición retira tantos tokens de cada uno de sus lugares de entrada como lo indican los pesos de los arcos 
+      		conectores y añade los tokens a sus lugares de salida como lo indican los pesos de los arcos de salida.
+		\item \textbf{Tokens}: Los tokens representan el valor específico de la condición o estado. Son graficados como un punto negro o un
+      		número natural o cero dentro de una plaza.
+	\end{itemize}
+	 
+	\subsection{Estructura de una Red de Petri}
+		Una Red de Petri Marcada queda definida como una 5-tupla de la siguiente manera:
+		
+		\begin{center}
+			$PN = \{P, T, I^-, I^+, m_0\}$ 
+		\end{center}
+		
+		Donde:
+		\begin{itemize}
+		
+			\item $\boldsymbol{P = \{p_1, p_2, p_3 \ldots p_m\}}$, conjunto de $m$ lugares con $m$ finito y distinto de cero.
+										
+			\item $\boldsymbol{T = \{t_1, t_2, t_3 \ldots t_n\}}$, conjunto de $n$ transiciones con $n$ finito y 
+				distinto de cero.
+		
+			\item $\boldsymbol{I}$, matriz de incidencia. Esta matriz es de dimensiones $m×n$ representa los pesos de los arcos, 
+				siendo sus valores positivos cuando el arco va desde una transición hacia una plaza y negativos los inversos.
+				Así mismo esta matriz de incidencia debe separarse en dos para representar la estructura. Estas dos matrices son:
+					\begin{description}
+						\item [$\boldsymbol {I-}$] Matriz de incidencia negativa. Esta matriz es de dimensiones $m×n$ representa
+							los pesos de los arcos que ingresan desde los lugares de P a las transiciones de T.
+						\item [$\boldsymbol {I+}$] Matriz de incidencia positiva. Esta matriz es de dimensiones $m×n$ representa
+							los pesos de los arcos que salen desde las transiciones de T hacia los lugares de P. 
+					\end{description}
+				Para una red con ``$m$'' plazas y ``$n$'' transiciones, la matriz de incidencia es de tamaño ``$m×n$'', sus 
+				elementos $a_{ij}$ son: \newline
+					\begin{equation}
+						\begin{matrix}
+							\forall p_i \in P \wedge \forall t_j\in T \Rightarrow a_{ij}=\;
+							\begin{cases} 
+								\begin{matrix} 	0 		& si \; entre \; p_i \; y \; t_j\\ 
+						 						  		&	 \;	no \; existen\; arcos\\
+												W_{ij} 	& si \; p_i \; es \; plaza\\
+													 	& de \; salida \; de \; t_j\\
+												-W_{ij} & si \; p_i\; es \; plaza\\
+												 		& de \; entrada \; de \; t_j 
+								\end{matrix}
+							\end{cases}
+						\end {matrix}
+						\label{eq: definicionincidencia}
+					\end{equation}
+				\newline
+			
+			\item $\boldsymbol {m_0}$ es el marcado inicial de la red, un vector de asignación de tokens a las plazas de la red,
+		 		de esta forma se define la configuración inicial de los tokens de la red. Por ejemplo puede definirse el 
+		 		marcado de una plaza como $m(i)$, esto indica la cantidad de tokens ubicados en la plaza ``$i$''.
+		\end{itemize}
+	
+	\subsection{Ejecución de una Red de Petri}
+	
+		El comportamiento dinámico de una red de Petri esta definido por la sensibilización y el disparo de sus transiciones
+		\begin{itemize}
+			\item \textbf{Transición sensibilizada:} Se dice que una transición $t_j$ esta sensibilizada si y solo si todas 
+		  		las plazas de entrada a la transición, tienen una cantidad de tokens igual o mayor al peso indicado por el 
+		  		arco que la une con la transición. Formalmente: \newline
+			  		\begin{equation}
+			  			\forall p_i \in I^-(t_j) / m(p_i) \geq W_{ij} 
+			  			\label{eq: sensibilizada}
+			  		\end{equation}
+		  		Siendo $W_{ij}$ el peso del arco que une la plaza ``$i$" con la transición ``$j$".
+		  
+		 	 \item \textbf{Disparo de una transición:} El disparo de una transición es lo que provoca que el estado (marcado)
+		  		de una Red de Petri cambie. La función disparo  ($d$)   de una transición $t_j$  se define de la siguiente 
+		  		manera. \newline
+					\begin{equation}
+						\begin{matrix}
+							d(m_k,t_j ) \Rightarrow m_{k+1} (p_i)=\;
+								\begin{cases} 
+									\begin{matrix} 	m_k (p_i )-W_{ij} & \forall p_i \in I^-(t_j)\\
+													m_k (p_i )+W_{ij} & \forall p_i \in I^+(t_j)\\
+													m_k (p_i ) & otros\; casos 
+									\end{matrix}
+								\end{cases}
+						\end {matrix}
+						\label{eq: funciondisparo}
+					\end{equation}		
+				\newline
+				Donde:
+					\begin{description}
+			  			\item [$\boldsymbol{m_k}$] es el marcado actual de la red.
+			  			\item [$\boldsymbol{m_{k+1}}$] es el marcado que tomara la red luego del disparo.
+			  			\item [$\boldsymbol{W_{ij}}$] son los elementos de la matriz de incidencia $I$.
+					\end{description}
+		\end{itemize}
+		
+		\subsubsection{Ecuación de estado de una Red de Petri}
+			La ecuación de estado determina el estado de la Red de Petri a cada instante, queda definida a partir de la matriz de 
+			incidencia y un vector de disparo que indica la transición o transiciones que deben ser disparadas. \newline
+				\begin{equation}
+					m_{k+1}=m_k+I×\delta_k
+					\label{eq: ecuacionestado}
+				\end{equation}
+						
+	\subsection{Arcos Inhibidores}
+		En las Redes de Petri vistas anteriormente las transiciones están sensibilizadas cuando en las plazas de entrada existe una
+		cantidad igual o mayor de tokens que el peso del arco que los une. Pero, en algunas situaciones, seria necesario que una
+		transición se encuentre sensibilizada cuando no existan tokens en alguna de sus plazas de entrada. Para este fin existen
+		los arcos inhibidores.
+		Los arcos inhibidores se representan con una línea finalizada en un círculo.
+		Se debe destacar que solo pueden ir desde plazas hacia las transiciones, nunca al revés. 
+		Ahora, en una Red de Petri con Arcos Inhibidores, se dice que una transición esta sensibilizada cuando cumple (\ref{eq: sensibilizada}) y
+		todas las plazas unidas a $t_j$ con arcos inhibidores tienen tokens.
+		De esta manera la ecuación de estado para una Red de Petri con arcos inhibidores toma la siguiente forma:
+			\begin{equation}
+				m_{k+1}=m_k+I×[\delta\; and\; !f_H(m_k,\;\delta)]
+				\label{eq: ecuacionestadoH}
+			\end{equation} 
+		Se agrega una función ``$f$'' que depende del marcado actual, del disparo a realizar y  de una función ``$H$'' que determina si 
+		el disparo de una transición esta sensibilizada o no de acuerdo a los arcos inhibidores. Esta función toma solo valores ceros
+		y unos, y al estar en una operación ``$and$'' con el disparo, puede inhibirlo y hacer que no produzca efectos.
+			\begin{equation}
+				f_H (m_i,\delta)=M_{>0} (m_i)\; and\; ( H×\delta)
+				\label{eq: funcionH}
+			\end{equation}
+		La función $M_{>0}$ es una función vectorial de ``$m$'' elementos. Cada componente ``$k$'' del resultado
+		queda definido por (\ref{eq:Mayor})
+			\begin{equation}
+				\begin{matrix}
+					M_{>0} (m_i)_k= \;
+						\begin{cases} 
+							\begin{matrix}	1 & si\;m_{ik}>0\\
+											0 & si\;m_{ik}=0
+							\end{matrix}
+						\end{cases}
+				\end {matrix} 
+				\label{eq:Mayor}
+			\end{equation} 
+
+
+		
